@@ -1,0 +1,67 @@
+show databases;
+create database ddl;
+use ddl;
+
+create table salesman( 
+salesman_id int, 
+name varchar(20), 
+city varchar(20), 
+commission float, 
+PRIMARY KEY(salesman_id)
+);
+
+create table customer(
+customer_id int, 
+cname varchar(20), 
+city varchar(20), 
+grade int, 
+salesman_id int, 
+PRIMARY KEY(customer_id), 
+FOREIGN KEY(salesman_id) REFERENCES salesman(salesman_id)
+);
+
+create table order_item(
+order_no int PRIMARY KEY, 
+purchase_amt int,
+ order_date date, 
+customer_id int , 
+salesman_id int, 
+FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+ FOREIGN KEY (salesman_id) REFERENCES salesman(salesman_id) );
+
+
+insert into salesman values
+(101, "Tanvi Gaikwad", "Pune", 0.15),
+(102, "Mrunmayee Jagtap", "Mumbai", 0.11),
+(103, "Srushti Bankar", "Surat", 0.8),
+(104, "Shraddha Kachare", "Delhi", 0.20);
+
+
+insert into customer values
+(201, "Murtaza", "Delhi", 100, 102),
+(202, "Kaushik", "Bengaluru", 200, 102),
+(203, "Sabrat", "Kolkatta", 300, 101),
+(204, "Abdullah", "Mumbai", 300, 103);
+
+
+insert into order_item values
+(301, 300, "2022/11/01", 203, 102),
+(302, 540, "2022/10/14", 202, 104),
+(303, 1020, "2022/08/11", 204, 101),
+(304, 420, "2022/08/17", 201, 103);
+
+alter table salesman add mobile_no int(10);
+
+select name, commission from salesman;
+
+alter table salesman modify column commission float;
+
+create index inx on order_item(salesman_id);
+
+create view v as select name, city from salesman where city="Pune";
+
+select max(grade), city from customer group by city;
+
+alter table customer drop column grade;
+
+select max(purchase_amt) , customer_id from order_item group by customer_id;

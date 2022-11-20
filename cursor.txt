@@ -1,0 +1,52 @@
+create database cursor00;
+use cursor00;
+
+
+create table O_RollCall(
+	oroll int primary key, 
+	name varchar(25) NOT NULL
+	);
+
+insert into O_RollCall values
+(1, "Murtaza"), 
+(2, "Subrat"), 
+(78,"Abdullah"), 
+(85,"Kaushik");
+
+
+create table N_RollCall(
+	nroll int primary key, 
+	name varchar(25) NOT NULL
+	);
+
+insert into N_RollCall values
+(3, "Mrunmayee"), 
+(2, "Subrat"), 
+(7,"Shraddha"), 
+(8,"Srushti"),
+(9,"Tanvi"),
+(78,"Abdullah");
+
+delimiter $$
+create procedure Merge()
+begin
+	declare roll int;
+	declare done int DEFAULT FALSE;
+	declare r1 CURSOR for SELECT oroll from O_RollCall;
+	declare CONTINUE HANDLER FOR NOT FOUND SET done = TRUE; 
+	OPEN r1;
+	loop1 : LOOP
+		FETCH r1 into roll;
+		if done then
+			leave loop1;
+		end if;
+		if not exists(select * from N_RollCall where nroll = roll) then
+			insert into N_RollCall select * from O_RollCall where oroll = roll;
+		end if;
+	end LOOP loop1;
+	CLOSE r1;
+end $$
+delimiter ;
+call Merge();
+		
+select * from N_RollCall;	

@@ -1,0 +1,25 @@
+import mysql.connector as c
+con=c.connect(host="localhost",
+              user="root",
+              passwd="mysql",
+              database="my_db")
+cursor=con.cursor()
+
+roll_no=int(input("Enter roll_no of Student:"))
+name=input("Enter name of Student:")
+age=int(input("Enter age of student:"))
+        
+query="Insert into Student values({},'{}',{})".format(roll_no,name,age)
+cursor.execute(query)
+con.commit()
+
+
+query="update Student set age=18 where roll_no=1"
+cursor.execute((query))
+con.commit()
+
+print("Data updated successfully")
+query="delete from Student  where roll_no=1"
+cursor.execute((query))
+con.commit()
+print("Data deleted successfully")

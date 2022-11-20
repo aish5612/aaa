@@ -1,0 +1,21 @@
+use school
+
+db.Student.insertMany([
+	{ name:'Murtaza', class:"T.E.", address:"Pune", age:20, fees:87000}, 
+	{ name:'Subrat', class:"T.E.", address:"Nainital", age:21, fees:99000}, 
+	{ name:'Kaushik', class:"T.E.", address:"Nanded", age:20, fees:115000},
+	{ name:'Mrunmayee', class:"T.E.", address:"Mumbai", age:20, fees:56000}, 
+	{ name:'Shraddha', class:"T.E.", address:"Manjri", age:19, fees:75000}, 
+	{ name:'Abdullah', class:"T.E.", address:"Kalyan", age:20, fees:87000},
+	{ name:'Srushti', class:"T.E.", address:"Thane", age:21, fees:75000}, 
+	{ name:'Tanvi', class:"T.E.", address:"Goa", age:20, fees:99000}, 
+	{ name:'Mayank', class:"T.E.", address:"Kota", age:19, fees:56000}
+	])
+
+db.Student.find().pretty()
+
+db.Student.updateOne({name:'Mayank'},{$set:{name:'Sharva'}})
+
+db.Student.updateOne({name:'Sharva'},{$set:{age:22}})
+
+db.Student.remove({name:"Sharva"})

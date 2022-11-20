@@ -1,0 +1,29 @@
+create database area;
+use area;
+
+create table areas(
+  radius float,
+  area float
+  );
+  
+delimiter $$
+create procedure area()
+begin
+declare area float;
+declare radius float;
+set radius=5;
+loop1 : LOOP
+if radius=10 then
+leave loop1;
+else
+set area=3.14*radius*radius;
+insert into areas values(radius, area);
+set radius=radius+1;
+end if;
+end LOOP;
+END $$
+
+delimiter ;
+call area();
+
+select * from areas;

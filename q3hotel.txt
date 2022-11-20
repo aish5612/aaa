@@ -1,0 +1,108 @@
+create database hotel_management;
+use hotel_management;
+
+create table hotel(
+    hotel_no int primary key,
+    name varchar(255),
+    address varchar(255)
+    );
+
+create table room(
+    room_no int primary key,
+    hotel_no int,
+    type varchar(255),
+    price int,
+    foreign key (hotel_no) references hotel(hotel_no)
+    );
+
+create table guest(
+    guest_no int primary key,
+    name varchar(255),
+    address varchar(255)
+    );
+
+create table booking(
+    hotel_no int,
+    guest_no int,
+    date_from date,
+    date_to date,
+    room_no int,
+    foreign key (hotel_no) references hotel(hotel_no),
+    foreign key (room_no) references room(room_no),
+    foreign key (guest_no) references guest(guest_no)
+);
+
+desc hotel;
+desc guest;
+desc room;
+
+insert into hotel values
+(1, "Mariott",  "Pune"),
+(2, "Conrad",  "Nainital"),
+(3, "Novotel",  "Kalyan"),
+(4, "Taj",  "Nanded"),
+(5, "Grosvenor",  "Banglore"),
+(6, "Ibis",  "Chennai");
+
+insert into room values
+(101, 2,  "Suite", 8999),
+(102, 5,  "Duplex", 8999),
+(103, 6,  "Suite", 6999),
+(104, 4,  "Suite", 5999),
+(105, 3,  "Honeymoon Suite", 6999),
+(106, 5,  "Suite", 5999),
+(107, 6,  "Honeymoon Suite", 7999),
+(108, 5,  "Honeymoon Suite", 7999),
+(109, 1,  "Duplex", 6999),
+(110, 5,  "Suite", 5999);
+
+insert into guest values
+(201, "Murtaza", "Kashmir"),
+(202, "Kaushik", "Manali"),
+(203, "Sabrat", "Assam"),
+(204, "Abdullah", "Punjab"),
+(205, "Mrunmayee", "Tamil Nadu"),
+(206, "Tanvi", "kerela"),
+(207, "Shraddha", "Gujrat"),
+(208, "Srushti", "Rajastan");
+
+SELECT hotel.name, room.type, room.price
+    from hotel
+    inner join room on hotel.hotel_no=room.hotel_no
+    where hotel.name="Grosvenor";
+
+insert into booking values
+(2, 203, "2022-10-26", "2022-10-29", 101),
+(5, 204, "2022-11-17", "2022-11-22", 102),
+(3, 208, "2022-11-15", "2022-11-27", 105),
+(6, 202, "2022-12-21", "2022-12-29", 107),
+(5, 201, "2022-11-18", "2022-12-22", 106),
+(1, 206, "2022-08-12", "2022-08-18", 109),
+(5, 207, "2022-10-18", "2022-10-23", 110);
+
+select guest.name, booking.room_no, booking.date_from, booking.date_to, booking.hotel_no
+    from guest
+    inner join booking on booking.guest_no=guest.guest_no
+    where booking.hotel_no=5 and "2022-11-19">=booking.date_from and "2022-11-19"<=booking.date_to;
+
+
+select room.room_no, room.hotel_no, room.type, room.price, guest.name  from room , booking , guest
+    where room.hotel_no = (select hotel_no from hotel where name = 'Grosvenor' and booking.hotel_no=5 and "2022-11-19">=booking.date_from and "2022-11-19"<=booking.date_to)
+    And room.room_no = booking.room_no
+    And booking.guest_no = guest.guest_no;
+
+select booking.hotel_no, sum(room.price) as total
+    from booking
+    inner join room on booking.room_no=room.room_no
+    where booking.hotel_no=5 and "2022-11-19">=booking.date_from and "2022-11-19"<=booking.date_to;
+    
+select guest.name, booking.room_no, booking.hotel_no
+    from guest
+    inner join booking on booking.guest_no=guest.guest_no
+    where booking.hotel_no=5 and not("2022-11-19">=booking.date_from and "2022-11-19"<=booking.date_to);
+
+
+select booking.hotel_no, sum(room.price) as total
+    from booking
+    inner join room on booking.room_no=room.room_no
+    where booking.hotel_no=5 and not("2022-11-19">=booking.date_from and "2022-11-19"<=booking.date_to);

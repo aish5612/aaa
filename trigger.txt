@@ -1,0 +1,112 @@
+create database library;
+
+
+
+use library;
+
+
+
+
+create table Library(
+    rollno int,
+    name varchar(255),
+    bookname varchar(255),
+    doi date
+    );
+
+
+
+
+ create table Library_audit(
+    rollno int,
+    name varchar(255),
+    bookname varchar(255),
+    doi date
+    );
+
+
+
+
+insert into Library
+    values
+    (1, 'Murtaza','Tintin','2022-10-10'),
+    (2, 'Abdullah','oliver','2022-9-30'),
+    (3, 'Subrat','November Love','2022-5-12'),
+    (4, 'Kaushik','50 shades','2022-10-1'),
+    (5, 'Mrunmayee','kidnapped','2022-8-15'),
+    (6, 'Shraddha','hello','2022-9-14');
+
+
+
+    
+delimiter //
+create trigger after_insert after insert on Library for each row
+begin
+insert into Library_audit values(new.rollno, new.name, new.bookname, new.doi);
+end
+//
+
+
+
+
+insert into Library
+    values
+    (7, 'Srushti','Harry Potter','2022-10-21'),
+    (8, 'Tanvi','Ugly lover','2022-9-14');
+    //
+
+
+
+
+select * from Library_audit;
+//
+
+
+
+
+create trigger after_update after update on Library for each row
+begin
+insert into Library_audit values(old.rollno, old.name, old.bookname, old.doi);
+end
+//
+
+
+
+
+update Library
+set name='Mayank'
+where name='Abdullah';
+//
+
+
+
+
+select * from Library;
+//
+
+select * from Library_audit;
+//
+
+
+
+
+create trigger after_delete after delete on Library for each row
+begin
+insert into Library_audit values(old.rollno, old.name, old.bookname, old.doi);
+end
+//
+
+
+
+
+delete from Library where rollno=7;
+//
+
+
+
+
+select * from Library;
+//
+
+select * from Library_audit;
+//

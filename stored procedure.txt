@@ -1,0 +1,77 @@
+create database stored_procedure;
+use stored_procedure;
+
+create table Student_result(
+    roll_no int primary key,
+    name varchar(255),
+    total_marks int
+    );
+
+
+
+
+insert into Student_result
+    values
+    (1, 'Kaushik', 1300),
+    (2, 'Subrat', 500),
+    (3, 'Shraddha', 1490),
+    (4, 'Murtaza', 850),
+    (5, 'Mrunmayee', 450);
+
+
+
+
+create table result(
+    roll_no int,
+    name varchar(255),
+    class varchar(255)
+    );
+
+
+
+
+delimiter //
+create procedure proc_grade(in total_marks int, out class varchar(255))
+begin
+if total_marks<=1500 and total_marks>=990 then set class='DIST';
+end if;
+if total_marks<=989 and total_marks>=900 then set class='FC';
+end if;
+if total_marks<=899 and total_marks>=825 then set class='HSC';
+end if;
+if total_marks<=824 and total_marks>=750 then set class='SC';
+end if;
+if total_marks<=749 and total_marks>=650 then set class='PC';
+end if;
+if total_marks < 650 then set class='fail';
+end if;
+end ;
+//
+
+
+
+
+create function find_result(roll_in int) returns int deterministic
+begin
+declare fmarks int;
+declare grade char(10);
+declare stud_name char(10);
+select Student_result.total_marks,Student_result.name into fmarks, stud_name from
+Student_result where Student_result.roll_no=roll_in;
+call proc_grade(fmarks,@grade);
+insert into result values(roll_in,stud_name, @grade);
+return roll_in; 
+end;
+//
+
+delimiter ;
+
+
+select find_result(1);
+select find_result(2);
+select find_result(3);
+
+
+
+
+select * from result;

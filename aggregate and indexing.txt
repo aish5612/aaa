@@ -1,0 +1,37 @@
+use student
+
+db.Student.insertMany([
+	{ name:'Murtaza', class:"S.E.", address:"Pune", age:20, fees:87000}, 
+	{ name:'Subrat', class:"T.E.", address:"Nainital", age:21, fees:99000}, 
+	{ name:'Kaushik', class:"T.E.", address:"Nanded", age:20, fees:115000},
+	{ name:'Mrunmayuee', class:"T.E.", address:"Mumbai", age:20, fees:56000}, 
+	{ name:'Shraddha', class:"S.E.", address:"Manjri", age:19, fees:75000}, 
+	{ name:'Abdullah', class:"T.E.", address:"Kalyan", age:20, fees:87000},
+	{ name:'Srushti', class:"S.E.", address:"Thane", age:21, fees:75000}, 
+	{ name:'Tanvi', class:"T.E.", address:"Goa", age:20, fees:99000}, 
+	{ name:'Mayank', class:"S.E.", address:"Kota", age:19, fees:56000}
+	])
+
+
+db.Student.count({class:"T.E."})
+
+
+db.Student.count({class:"S.E."})
+
+db.Student.count()
+
+db.Student.find().sort({"age":-1}).limit(1)
+
+db.Student.find().sort({"age":1}).limit(1)
+
+db.Student.aggregate([{$group:{_id:"$class",max:{$max:"$age"}}}])
+
+db.Student.aggregate([{$match:{ age: { $gt : 20 }}}]).pretty()
+
+db.Student.find().sort({age : 1})
+
+db.Student.find().sort({age : -1})
+
+db.Student.createIndex({name:1})
+
+db.Student.getIndexes()

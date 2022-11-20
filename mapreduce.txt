@@ -1,0 +1,21 @@
+use map
+
+db.createCollection('Stud_marks')
+
+db.Stud_marks.insertMany(
+[ {name: 'Tanvi', class: 'TE', age: 20, marks: 90},
+ {name: 'Mrunmayee', class: 'TE', age: 20, marks: 85},
+ {name: 'Murtaza', class: 'TE', age: 21, marks: 92},
+ {name: 'Subrat', class: 'TE', age: 21, marks: 79},
+ {name: 'Srushti', class: 'TE', age: 20, marks: 83} ]
+ )
+
+db.Stud_marks.find()
+
+var mapFun = function(){emit(this.age, this.marks)}
+
+var reduceFun = function(key, values){return Array.sum(values)}
+
+ db.Stud_marks.mapReduce(mapFun, reduceFun, {'out': 'Result'})
+
+db.Result.find()
