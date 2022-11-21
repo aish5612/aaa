@@ -1,0 +1,63 @@
+create database unnamed_procedure;
+use unnamed_procedure;
+
+create table borrower(
+  rollin int primary key,
+  name varchar(255),
+  doi date,
+  nameofbook varchar(255),
+  status varchar(255)
+  );
+  
+  
+
+
+create table fine(
+  rollno int,
+  foreign key(rollno) references borrower(rollin),
+  returndate date,
+  amount int
+  );
+  
+
+
+insert into borrower values
+  (1, 'Murtaza', '2022-10-10', 'Tintin', 'I'),
+  (2, 'Subrat', '2022-8-19', 'Oliver twist', 'I'),
+  (3, 'Kaushik', '2022-9-25', 'October', 'I')
+  ;
+  
+select * from borrower;
+
+select * from fine;
+  
+delimiter //
+create procedure calculate(in roll int)
+begin
+declare fine1 int;
+declare noofdays int;
+declare issuedate date;
+declare exit handler for SQLEXCEPTION select 'create table definition';
+select doi into issuedate from borrower where rollin=roll;
+select datediff(curdate(), issuedate) into noofdays;
+if noofdays>15 and noofdays <=30 then
+set fine1=noofdays*5;
+insert into fine values (roll, curdate(), fine1);
+elseif noofdays>30 then
+set fine1=((noofdays-30)*50)+ 15*5;
+insert into fine values (roll, curdate(), fine1);
+else
+insert into fine values (roll, curdate(), 0);
+end if;
+update borrower set status='R' where rollin=roll;
+end
+//
+
+
+
+call calculate(1);//
+call calculate(2);//
+call calculate(3);//
+select * from fine;//
+
+select * from borrower;//
